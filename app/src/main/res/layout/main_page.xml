@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.bogdan.thefirst.MainPage">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Email:" />
+
+    <EditText
+        android:id="@+id/startPageEmailTxtField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textEmailAddress" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Password:" />
+
+    <EditText
+        android:id="@+id/startPagePasswdTxtField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPassword" />
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/startPageLoginBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Войти" />
+
+        <Button
+            android:id="@+id/startPageRegistrBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Регистрация" />
+    </GridLayout>
+
+</LinearLayout>
