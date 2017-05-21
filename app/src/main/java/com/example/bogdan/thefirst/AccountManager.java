@@ -6,11 +6,10 @@ import java.io.UnsupportedEncodingException;
 
 import java.security.*;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 class AccountManager {
-
-    static final int MIN_EMAIL_LENGTH = 6;
-    static final int MIN_PASS_LENGTH = 4;
 
     private static class SingletonHolder {
         static AccountManager instance = new AccountManager();
@@ -80,8 +79,19 @@ class AccountManager {
     }
 
     private boolean emailAndPasswordIsValid(String email, String pass) {
+        int MIN_EMAIL_LENGTH = 6;
+        int MIN_PASS_LENGTH = 4;
         return !(email == null || pass == null || email.length() < MIN_EMAIL_LENGTH
-                || pass.length() < MIN_PASS_LENGTH);
+                || pass.length() < MIN_PASS_LENGTH || !emailIsValid(email));
+    }
+
+    private boolean emailIsValid(String email) {
+        String rgx = "^[a-zA-Z0-9._-]+@"
+                + "((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])"
+                + "|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+        Pattern p = Pattern.compile(rgx);
+        Matcher m = p.matcher(email);
+        return m.matches();
     }
 
     @Nullable

@@ -41,10 +41,7 @@ public class RegistrationPage extends AppCompatActivity {
                         finish();
                         break;
                     case INVALID_EMAIL_OR_PASSWORD:
-                        showMessage("Мин. длина email: " +
-                                AccountManager.MIN_EMAIL_LENGTH + "\n" +
-                                "Мин. длина пароля: " +
-                                AccountManager.MIN_PASS_LENGTH);
+                        showMessage("Некорректный логин и/или пароль");
                         break;
                     case PASSWORDS_DO_NOT_MATCH:
                         showMessage("Пароли не совпадают");
