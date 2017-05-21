@@ -42,6 +42,8 @@ public class MainPage extends AppCompatActivity {
         Button loginBtn = (Button) findViewById(id.startPageLoginBtn);
         Button regBtn = (Button) findViewById(id.startPageRegistrBtn);
 
+        accountManager.openDB(new DBHelper(this));
+
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

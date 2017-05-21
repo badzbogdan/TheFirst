@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import java.io.UnsupportedEncodingException;
 
 import java.security.*;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,11 +18,15 @@ class AccountManager {
         return SingletonHolder.instance;
     }
 
-    private AccountDB accountDB = new AccountDB();
+    private AccountDB accountDB;
 
     private String currentEmail;
 
     private AccountManager() {}
+
+    void openDB(DBHelper dbHelper) {
+        accountDB = new AccountDB(dbHelper);
+    }
 
     String getCurrentEmail() {
         return currentEmail;
@@ -42,13 +45,13 @@ class AccountManager {
             return false;
         }
 
-        byte[] md5Pass = convertToMD5(pass);
+        String md5Pass = convertToMD5(pass);
         if (md5Pass == null) {
             return false;
         }
 
-        byte[] md5PassFromDB = accountDB.getPass(email);
-        if (!Arrays.equals(md5Pass, md5PassFromDB)) {
+        String md5PassFromDB = accountDB.getPass(email);
+        if (!md5Pass.equals(md5PassFromDB)) {
             return false;
         }
 
@@ -69,7 +72,7 @@ class AccountManager {
             return ResultType.LOGIN_IS_EXIST;
         }
 
-        byte[] md5Pass = convertToMD5(pass);
+        String md5Pass = convertToMD5(pass);
         if (md5Pass == null) {
             return ResultType.MD5_CONVERT_EXCEPTION;
         }
@@ -95,7 +98,7 @@ class AccountManager {
     }
 
     @Nullable
-    private byte[] convertToMD5(String pass) {
+    private String convertToMD5(String pass) {
         byte[] bytesOfPass;
         try {
             bytesOfPass = pass.getBytes("UTF-8");
@@ -112,7 +115,13 @@ class AccountManager {
             return null;
         }
 
-        return md.digest(bytesOfPass);
+        bytesOfPass = md.digest(bytesOfPass);
+        StringBuilder out = new StringBuilder(bytesOfPass.length * 2);
+        for (byte b : bytesOfPass) {
+            out.append(String.format("%02X", (byte) b));
+        }
+
+        return out.toString();
     }
 
 }

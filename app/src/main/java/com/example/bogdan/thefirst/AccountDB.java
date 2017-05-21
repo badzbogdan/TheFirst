@@ -1,23 +1,49 @@
 package com.example.bogdan.thefirst;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 class AccountDB {
+    static final String DB_NAME = "AccountDB";
+    static final String TABLE_NAME = "Accounts";
 
-    // <email, MD5 pass>
-    private Map<String, byte[]> accounts = new HashMap<>();
+    private DBHelper dbHelper;
 
-    void addAccount(String email, byte[] md5Pass) {
-        accounts.put(email, md5Pass);
+    AccountDB(DBHelper dbHelper) {
+        this.dbHelper = dbHelper;
     }
 
-    byte[] getPass(String email) {
-        return accounts.get(email);
+    void addAccount(String email, String md5Pass) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("email", email);
+        cv.put("password", md5Pass);
+        db.insert(TABLE_NAME, null, cv);
+        db.close();
+    }
+
+    String getPass(String email) {
+        String result = "";
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String sql = "SELECT password FROM " + TABLE_NAME + " WHERE email=?; ";
+        Cursor cursor = db.rawQuery(sql, new String[] {email});
+        if (cursor.moveToFirst()) {
+            result = cursor.getString(cursor.getColumnIndex("password"));
+        }
+        db.close();
+        cursor.close();
+        return result;
     }
 
     boolean containsEmail(String email) {
-        return accounts.containsKey(email);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String sql = "SELECT email FROM " + TABLE_NAME + " WHERE email=?; ";
+        Cursor cursor = db.rawQuery(sql, new String[] {email});
+        boolean result = cursor.moveToFirst();
+        db.close();
+        cursor.close();
+        return result;
     }
 
 }
