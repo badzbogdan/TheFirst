@@ -15,7 +15,7 @@ class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create table " + AccountDB.TABLE_NAME +
             " (id integer primary key autoincrement,"
             + "email text,"
-            + "password BLOB" + ");");
+            + "password text" + ");");
     }
 
     @Override
