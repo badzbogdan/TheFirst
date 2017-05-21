@@ -21,7 +21,7 @@ public class LoginPage extends AppCompatActivity {
 
     private void initComponents() {
         TextView logInEmailText = (TextView) findViewById(id.logInEmailText);
-        logInEmailText.setText(accountManager.getCurrentEmail());
+        logInEmailText.setText(accountManager.loadSession());
 
         Button logInBtn = (Button) findViewById(id.logInBtn);
         logInBtn.setOnClickListener(new View.OnClickListener() {

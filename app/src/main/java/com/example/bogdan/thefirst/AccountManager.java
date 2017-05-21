@@ -1,5 +1,6 @@
 package com.example.bogdan.thefirst;
 
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
 import java.io.UnsupportedEncodingException;
@@ -18,9 +19,9 @@ class AccountManager {
         return SingletonHolder.instance;
     }
 
-    private AccountDB accountDB;
+    private final String SAVED_SESSION = "saved_session";
 
-    private String currentEmail;
+    private AccountDB accountDB;
 
     private AccountManager() {}
 
@@ -28,12 +29,31 @@ class AccountManager {
         accountDB = new AccountDB(dbHelper);
     }
 
-    String getCurrentEmail() {
-        return currentEmail;
+    private SharedPreferences prefs;
+    void setPreferences(SharedPreferences prefs) {
+        this.prefs = prefs;
+    }
+
+    private void saveSession(String email) {
+        if (email == null || !emailIsValid(email)) {
+            email = "no_session";
+        }
+
+        SharedPreferences.Editor ed = prefs.edit();
+        ed.putString(SAVED_SESSION, email);
+        ed.apply();
     }
 
     void clearCurrentEmail() {
-        currentEmail = null;
+        saveSession(null);
+    }
+
+    boolean sessionIsActive() {
+        return emailIsValid(loadSession());
+    }
+
+    String loadSession() {
+        return prefs.getString(SAVED_SESSION, "");
     }
 
     boolean logIn(String email, String pass) {
@@ -55,7 +75,7 @@ class AccountManager {
             return false;
         }
 
-        currentEmail = email;
+        saveSession(email);
         return true;
     }
 

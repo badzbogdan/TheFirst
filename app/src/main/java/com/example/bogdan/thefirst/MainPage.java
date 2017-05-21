@@ -24,6 +24,10 @@ public class MainPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(layout.main_page);
         initComponents();
+
+        if (accountManager.sessionIsActive()) {
+            logIn();
+        }
     }
 
     @Override
@@ -43,6 +47,7 @@ public class MainPage extends AppCompatActivity {
         Button regBtn = (Button) findViewById(id.startPageRegistrBtn);
 
         accountManager.openDB(new DBHelper(this));
+        accountManager.setPreferences(getPreferences(MODE_PRIVATE));
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,8 +55,7 @@ public class MainPage extends AppCompatActivity {
                 String email = emailTextField.getText().toString();
                 String pass = passField.getText().toString();
                 if (accountManager.logIn(email, pass)) {
-                    Intent intent = new Intent(v.getContext(), LoginPage.class);
-                    startActivityForResult(intent, 0);
+                    logIn();
                 } else {
                     showMessage("Неверный логин и/или пароль");
                 }
@@ -67,6 +71,11 @@ public class MainPage extends AppCompatActivity {
         });
     }
 
+    private void logIn() {
+        Intent intent = new Intent(this, LoginPage.class);
+        startActivityForResult(intent, 0);
+    }
+
     private void showMessage(String message) {
         AlertDialog.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -76,14 +85,14 @@ public class MainPage extends AppCompatActivity {
         }
 
         builder.setTitle("Error")
-                .setMessage(message)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+            .setMessage(message)
+            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            })
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .show();
     }
 
 }
